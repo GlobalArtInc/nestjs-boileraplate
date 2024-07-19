@@ -1,7 +1,7 @@
 set -e
 
 DIR=/workspace
-PROJECT_NAME=test
+PROJECT_NAME=nest
 REPO_URL=git@github.com:GlobalArtInc/nestjs-boileraplate.git
 # cd $DIR
 mkdir -p /workspace
