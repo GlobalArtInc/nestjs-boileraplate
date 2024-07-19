@@ -1,0 +1,10 @@
+{{ $_ := set . "project" "nest" }}
+{{ $_ := set . "BaseImage" "node:20" }}
+{{ $_ := env "ENVNAME" | set . "env" }}
+
+project: {{ .project }}
+configVersion: 1
+---
+{{ range $path, $content := .Files.Glob ".werf-partial/*.yaml" }}
+{{ tpl $content $ }}
+{{ end }}

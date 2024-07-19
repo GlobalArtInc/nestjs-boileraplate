@@ -1,0 +1,36 @@
+{{ if (eq .Env "dev") }}
+---
+image: core-image
+from: {{ .BaseImage }}
+git:
+- add: /prepare-scripts
+  to: /install/prepare-scripts
+docker:
+  WORKDIR: /workspace/
+  USER: root
+  EXPOSE: "80"
+  CMD: ["/bin/sleep", "infinity"]
+ansible:
+  install:
+  - name: "Install additional packages"
+    apt:
+      state: present
+      update_cache: yes
+      pkg:
+      - locales
+      - mc
+      - vim
+  - name: Install PNPM
+    shell: npm -g i pnpm
+  - name: "Install NestJS"
+    shell: npm -g i @nestjs/cli
+  - name: StrictHostKeyChecking no
+    shell: | 
+      printf "Host gitlab.com\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" >> /etc/ssh/ssh_config
+---
+image: core-api-{{ .env }}
+fromImage: core-image
+docker:
+  WORKDIR: /workspace
+---
+{{ end }}
