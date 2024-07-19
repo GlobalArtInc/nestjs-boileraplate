@@ -14,6 +14,7 @@ if [ -e ".helm/secrets-$ENVNAME.yaml" ]; then
     secret_values_param="--secret-values=.helm/secrets-$ENVNAME.yaml"
 fi
 
+def_content=$(set | awk "/^${ENVNAME} \(\)/,/\}/")
 if [[ ! -z "$def_content" ]]; then
     ci_values=$(echo "$def_content" | awk '/export CI_/ {gsub("export ", ""); print}' | sed 's/\(.*\)=\(.*\)/--set \L\1\E=\2/' | tr -d ';')
 fi
