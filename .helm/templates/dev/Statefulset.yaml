@@ -4,38 +4,38 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}-dev
+  name: {{ .Chart.Name }}-api
   labels:
-    app: {{ .Chart.Name }}-dev
+    app: {{ .Chart.Name }}-api
 spec:
-  serviceName: {{ .Chart.Name }}-dev
+  serviceName: {{ .Chart.Name }}-api
   replicas: {{ $replicaCount }}
   selector:
       matchLabels:
-        app: {{ .Chart.Name }}-dev
+        app: {{ .Chart.Name }}-api
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}-dev
+        app: {{ .Chart.Name }}-api
     spec:
-      initContainers:
-      - name: prepare-dev-env
-        image: '{{ index .Values.werf.image (printf "%s-dev" .Chart.Name) }}'
-        envFrom:
-        - configMapRef:
-            name: {{ .Chart.Name }}-common-config
-        command: [ "/bin/bash", '-c' ]
-        args:
-          -
-            source /install/prepare-scripts/init-dev-env.sh;
-        volumeMounts:
-        - mountPath: /workspace
-          name: workspace
-        - name: id-rsa-vcs
-          mountPath: "/root/.ssh/id_rsa"
-          subPath: "id_rsa" 
+      # initContainers:
+      # - name: prepare-dev-env
+      #   image: '{{ index .Values.werf.image (printf "%s-dev" .Chart.Name) }}'
+      #   envFrom:
+      #   - configMapRef:
+      #       name: {{ .Chart.Name }}-common-config
+      #   command: [ "/bin/bash", '-c' ]
+      #   args:
+      #     -
+      #       source /install/prepare-scripts/init-dev-env.sh;
+      #   volumeMounts:
+      #   - mountPath: /workspace
+      #     name: workspace
+      #   - name: id-rsa-vcs
+      #     mountPath: "/root/.ssh/id_rsa"
+      #     subPath: "id_rsa" 
       containers:
-      - name: {{ .Chart.Name }}-dev
+      - name: {{ .Chart.Name }}-api
         image: '{{ index .Values.werf.image (printf "%s-dev" .Chart.Name) }}'
         env:
         - name: PROJECT
