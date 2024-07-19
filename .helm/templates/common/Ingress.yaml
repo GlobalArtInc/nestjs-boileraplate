@@ -1,0 +1,27 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.org/websocket-services: {{ .Chart.Name }}-api
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header 'Access-Control-Allow-Origin' "$http_origin" always;
+      add_header 'Access-Control-Allow-Credentials' "true" always;
+      add_header 'Access-Control-Allow-Methods' "PUT, GET, POST, PATCH, DELETE, OPTIONS" always;
+      add_header 'Access-Control-Allow-Headers' "DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization" always;
+      add_header 'Access-Control-Max-Age' 1728000 always;
+spec:
+  rules:
+  - host: {{ .Values.ci_url  }}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /api
+        backend:
+          service:
+            name: {{ .Chart.Name }}-api
+            port:
+              number: 3000

@@ -1,6 +1,6 @@
 {{ if (eq .Env "dev") }}
 ---
-image: core-image
+image: nest-dev
 from: {{ .BaseImage }}
 git:
 - add: /prepare-scripts
@@ -27,10 +27,5 @@ ansible:
   - name: StrictHostKeyChecking no
     shell: | 
       printf "Host gitlab.com\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" >> /etc/ssh/ssh_config
----
-image: core-api-{{ .env }}
-fromImage: core-image
-docker:
-  WORKDIR: /workspace
 ---
 {{ end }}
